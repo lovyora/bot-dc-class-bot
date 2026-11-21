@@ -47,3 +47,37 @@ async def roll(ctx, dice: str):
     result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
     await ctx.send(result)
 
+def get_tips(how_many):
+    tips_for_teen = [
+        "Cobalah untuk menghindari penggunaan barang sekali pakai, seperti gelas dan botol plastik",
+        "Pindah ke e-reader untuk mengurangi konsumsi kertas",
+        "Pilih produk bahan makanan dan makanan ringan dengan kemasan sesedikit mungkin, beli makanan berdasarkan beratnya (tanpa kemasan), dan cobalah beralih ke tas yang dapat digunakan kembali",
+
+    ]
+
+    return random.sample(tips_for_teen, k=how_many)
+
+@bot.command('tipsteen')
+async def tipsteen(ctx, howmany:int=2):
+    all_tips = get_tips(howmany)
+    sent_tips = '\n'.join(all_tips)
+    await ctx.send(sent_tips)
+
+def get_waste_type(waste):
+    #standarisasi inputan
+    waste = waste.lower().strip()
+    non_recyclable_waste = ["food scraps", "dirty tissue", "diaper", "cigarette butt", "styrofoam"]
+    recyclable_waste = ["plastic bottle", "plastic cup", "glass bottle", "newspaper", "cardboard", "can"]
+
+    if waste in recyclable_waste:
+        return "It's a recyclable waste"
+    elif waste in non_recyclable_waste:
+        return "Non recyclable waste" 
+    else:
+        return "Not found"
+
+@bot.command('type')
+async def waste_type(ctx, *, waste:str):
+    type_waste = get_waste_type(waste)
+
+    await ctx.send(type_waste)
